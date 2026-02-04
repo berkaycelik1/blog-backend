@@ -6,6 +6,10 @@ const getPosts = (req, res) => {
 
         res.status(200).json(posts);
     } catch (error){
-        res.status(500).json({ message:"Mutfakta yangın çıktı!"});    
+        res.status(500).json({ message:"Bir şeyler ters gitti" });    
     }   
+};
+
+module.exports = {
+    getPosts
 };
