@@ -7,4 +7,6 @@ const getAllPosts = () => {
 
 module.exports = {
     getAllPosts
-};
+}; 
+
+ghuhnjnjk
