@@ -1,3 +1,5 @@
+const { DataSource} = require("typeorm");
+
 const AppDataSource = new DataSource({
     type: "postgres",
     host: "localhost",

@@ -12,6 +12,15 @@ app.use(express.json());
 app.get('/posts', postController.getPosts);
 app.get('/posts/:id', postController.getPostById);
 
-app.listen(PORT, () => {
-    console.log(`✅ Sunucu çalışıyor: http://localhost:${PORT}`);
+AppDataSource.initialize()
+.then(() => {
+    console.log("🐘 Veritabanı bağlantısı başarılı!");
+
+    app.listen(PORT, () => {
+        console.log(`✅ Sunucu çalışıyor: http://localhost:${PORT}`);
+    });
+})
+
+.catch((error) => {
+    console.error("❌ Veritabanı Hatası:", error);
 });
