@@ -1,4 +1,5 @@
 const express = require('express');
+const AppDataSource = require('./data-source');
 const cors = require('cors');
 const postController = require('./controllers/postController');
 
