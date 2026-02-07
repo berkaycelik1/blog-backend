@@ -1,3 +1,4 @@
+const authController = require('./controllers/authController');
 const express = require('express');
 const AppDataSource = require('./data-source');
 const cors = require('cors');
@@ -12,6 +13,8 @@ app.use(express.json());
 app.get('/posts', postController.getPosts);
 app.get('/posts/:id', postController.getPostById);
 
+app.post('/register', authController.register);
+
 AppDataSource.initialize()
 .then(() => {
     console.log("🐘 Veritabanı bağlantısı başarılı!");
@@ -23,4 +26,4 @@ AppDataSource.initialize()
 
 .catch((error) => {
     console.error("❌ Veritabanı Hatası:", error);
-});
+}); 
