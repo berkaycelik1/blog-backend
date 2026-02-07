@@ -34,6 +34,13 @@ const register = async (req, res) => {
             console.log("Gelen Mail:", email);
             console.log("Gelen Şire:", password);
 
+            const userRepository = AppDataSource.getRepository(User);
+            const user = await userRepository.findOneBy({ email: email});
+
+            if (!user) {
+                return res.status(404).json({ message: "Kullanıcı bulunamadı!" });
+            }
+
             } catch (error) {
                 console.error("Hata:", error);
             }
