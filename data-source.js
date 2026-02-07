@@ -1,3 +1,4 @@
+const User = require("./entity/User");
 const { DataSource} = require("typeorm");
 
 const AppDataSource = new DataSource({
@@ -7,9 +8,9 @@ const AppDataSource = new DataSource({
     username: "berkaycelik",
     password:"",
     database: "blog_db",
-    synchronieze: true,
+    synchronize: true,
     logging: true,
-    entities: [],
+    entities: [User],
 });
 
 module.exports = AppDataSource;
