@@ -40,6 +40,11 @@ const register = async (req, res) => {
             if (!user) {
                 return res.status(404).json({ message: "Kullanıcı bulunamadı!" });
             }
+            if (user.password !== password) {
+                return res.status(401).json({ message: "Hatalı şifre!" });
+            }
+
+            res.status(200).json({ message: "Giriş başarılı", user: user });
 
             } catch (error) {
                 console.error("Hata:", error);

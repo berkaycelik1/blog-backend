@@ -14,6 +14,7 @@ app.get('/posts', postController.getPosts);
 app.get('/posts/:id', postController.getPostById);
 
 app.post('/register', authController.register);
+app.post('/login', authController.login);
 
 AppDataSource.initialize()
 .then(() => {
