@@ -1,20 +1,16 @@
-const authController = require('./controllers/authController');
 const express = require('express');
 const AppDataSource = require('./data-source');
 const cors = require('cors');
-const postController = require('./controllers/postController');
+const authRouters = require('./routes/authRoutes');
+require("dotenv").config();
 
 const app = express();
-const PORT = 5001;
+const PORT = process.env.PORT || 5001; 
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/posts', postController.getPosts);
-app.get('/posts/:id', postController.getPostById);
-
-app.post('/register', authController.register);
-app.post('/login', authController.login);
+app.use('/auth', authRouters);
 
 AppDataSource.initialize()
 .then(() => {
