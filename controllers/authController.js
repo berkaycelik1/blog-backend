@@ -26,5 +26,18 @@ const register = async (req, res) => {
         res.status(500),json({ message: "Sunucu hatası oluştu."});
         }
     };
+    
+        const login = async (req, res) => {
+        try {
+            const {email, password} = req.body;
 
-    module.exports = { register};
+            console.log("Gelen Mail:", email);
+            console.log("Gelen Şire:", password);
+
+            } catch (error) {
+                console.error("Hata:", error);
+            }
+        };
+
+        module.exports = { register, login};
+
