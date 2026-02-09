@@ -1,10 +1,21 @@
-const posts = [
-    { id: 1, title: "Nodemon ile Hayat çok güzel", content: "Kodlarını parçalara böl, yönetmesi kolay olsun." },
-    { id: 2, title: "Axios Nedir?", content: "Frontend'in Backend ile konuşmasını sağlayan elçidir." },
-    { id: 3, title: "Express Gücü", content: "Node.js üzerinde sunucu kurmanın en popüler yoludur." }
-];
+const AppDataSource = require("../data-source");
+const Post = require("../entity/Post");
+const User = require("../entity/User");
 
-const getAllPosts = () => posts;
-const getPostById = (id) => posts.find(post => post.id === parseInt(id));
+const postRepository = AppDataSource.getRepository(Post);
+const userRepository = AppDataSource.getRepository(User);
 
-module.exports = { getAllPosts, getPostById };
+const createPost = async (userId, title, content,) => {
+    const user = await userRepository.findOneBy({ id: userId});
+    if (!user) {
+        throw new Error("Böyle bir yazar bulunamadı, post atılamaz!");
+    }
+    const newPost = postRepository.create({
+        title: title,
+        content: content,
+        user: user,
+    });
+    await postRepository.save(newPost);
+    return newPost;
+};
+module.exports = { createPost};
