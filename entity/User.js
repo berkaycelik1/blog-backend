@@ -20,4 +20,11 @@ module.exports = new EntitySchema({
             type: "varchar",
         },
     },
+    relations: {
+        posts: {
+            target: "Post",
+            type: "one-to-many",
+            inverseSide: "user",
+        },
+    },
 });
