@@ -2,6 +2,8 @@ const express = require('express');
 const AppDataSource = require('./data-source');
 const cors = require('cors');
 const authRouters = require('./routes/authRoutes');
+const postRoutes = require("./routes/postRoutes");
+
 require("dotenv").config();
 
 const app = express();
@@ -11,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/auth', authRouters);
+app.use('/posts', postRoutes);
 
 AppDataSource.initialize()
 .then(() => {
