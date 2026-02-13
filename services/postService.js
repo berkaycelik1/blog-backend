@@ -18,4 +18,18 @@ const createPost = async (userId, title, content,) => {
     await postRepository.save(newPost);
     return newPost;
 };
-module.exports = { createPost};
+
+const getAllPosts = async () => {
+    return await postRepository.find({
+        order: { id: "DESC" }
+    });
+};
+
+const getPostById = async (postId) => {
+    const post = await postRepository.findOneBy({ id: postId });
+    if (!post) {
+        throw new Error("Post bulunamadı!");
+    }
+    return post;
+};
+module.exports = { createPost, getAllPosts, getPostById};

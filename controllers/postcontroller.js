@@ -10,4 +10,24 @@ const createPost = async (req, res) => {
         res.status(400).json(new AppFailResponse(error.message));
     }
 };
-module.exports = { createPost };
+
+const getPosts = async (req, res) => {
+    try {
+        const posts = await postService.getAllPosts();
+        res.status(200).json(new AppSuccesResponse(" Postlar getirildi.", posts));
+    } catch (error) {
+        res.status(500).json(new AppFailResponse(error.message));
+    }
+};
+
+const getPostById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = await postService.getPostById(id);
+        res.status(200).json(new AppSuccessResponse(" Post detayı getirildi.", post));
+    } catch (error) {
+        res.status(404).json(new AppFailResponse(error.message));
+    }
+};
+ 
+module.exports = { createPost, getPosts, getPostById };  
