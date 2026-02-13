@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
     console.log(`⚡️ Birisi Telsize Bağlandı! ID: ${socket.id}`);
     socket.on("send_message", (data) => {
         console.log("📩 Mesaj Geldi:", data);
-        io:emit("receive_message", data);
+        io.emit("receive_message", data);
     });
     socket.on("disconnect", () => {
         console.log("❌ Birisi Telsizi Kapattı.");
