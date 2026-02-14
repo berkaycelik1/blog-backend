@@ -1,3 +1,4 @@
+const Message = require("./entity/Message");
 const { DataSource } = require("typeorm");
 const User = require("./entity/User");
 const Post = require("./entity/Post");
@@ -13,7 +14,7 @@ const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true,
     logging: true,
-    entities: [User, Post],
+    entities: [User, Post, Message],
 });
 
 module.exports = AppDataSource; 
