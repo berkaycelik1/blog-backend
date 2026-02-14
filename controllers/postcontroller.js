@@ -14,7 +14,7 @@ const createPost = async (req, res) => {
 const getPosts = async (req, res) => {
     try {
         const posts = await postService.getAllPosts();
-        res.status(200).json(new AppSuccesResponse(" Postlar getirildi.", posts));
+        res.status(200).json(new AppSuccessResponse(" Postlar getirildi.", posts));
     } catch (error) {
         res.status(500).json(new AppFailResponse(error.message));
     }
