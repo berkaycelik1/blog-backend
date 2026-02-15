@@ -6,8 +6,8 @@ const postRoutes = require("./routes/postRoutes");
 const http = require("http");
 const { Server } = require("socket.io");
 const Message = require("./entity/Message");
-
 require("dotenv").config();
+let onlineUsers = {};
 
 const app = express();
 const PORT = process.env.PORT || 5001; 
@@ -27,6 +27,11 @@ app.use('/posts', postRoutes);
 
 io.on("connection", async (socket) => {
     console.log(`⚡️ Birisi Telsize Bağlandı! ID: ${socket.id}`);
+    socket.on("login", (username) => {
+    onlineUsers[socket.id] = username;
+    console.log(`✅ Giriş Yapıldı: ${username}`);
+    io.emit("active_users", Object.values(onlineUsers));
+    });
     socket.on("join_room", async (roomId) => {
         socket.join(roomId);
         console.log(`👥 User ${socket.id} şu odaya girdi: ${roomId}`);
@@ -62,7 +67,14 @@ io.on("connection", async (socket) => {
             });
             
     socket.on("disconnect", () => {
-        console.log("❌ Birisi Telsizi Kapattı.");
+        const cikanKisim = onlineUsers[socket.id];
+        if (cikanKisim) {
+            delete onlineUsers[socket.id];
+            console.log(`❌ Çıkış Yapıldı: ${cikanKisim}`);
+            io.emit("active_users", Object.values(onlineUsers));
+        } else {
+            console.log("❌ Birisi Telsizi Kapattı (Giriş yapmamıştı).");
+        }
     });
 });
 
