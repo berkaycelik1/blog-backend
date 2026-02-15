@@ -11,6 +11,7 @@ require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5001; 
+
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
     cors: {
@@ -26,20 +27,40 @@ app.use('/posts', postRoutes);
 
 io.on("connection", async (socket) => {
     console.log(`⚡️ Birisi Telsize Bağlandı! ID: ${socket.id}`);
-    const messageRepo = AppDataSource.getRepository(Message);
-    const oldMessages = await messageRepo.find({ order: {id: "ASC"} });
-    socket.emit("load_messages", oldMessages);
+    socket.on("join_room", async (roomId) => {
+        socket.join(roomId);
+        console.log(`👥 User ${socket.id} şu odaya girdi: ${roomId}`);
+        try {
+            const messageRepo = AppDataSource.getRepository(Message);
+            const roomMessages = await messageRepo.find({
+                where: { roomId: roomId },
+                order:{ createdAt: "ASC" } 
+            });
+            socket.emit("load_messages", roomMessages);
+        } catch (e) {
+            console.error("Hata:", e);
+        }
+    });
     socket.on("send_message", async (data) => {
         console.log("📩 Mesaj Geldi:", data);
-        const messageRepo = AppDataSource.getRepository(Message);
-        const newMessage = messageRepo.create({
-          text: data.text,
-          sender: data.sender,
-          time: data.time  
-        });
-        await messageRepo.save(newMessage);
-        io.emit("receive_message", data);
-    });
+
+        try {
+            const messageRepo = AppDataSource.getRepository(Message);
+            const newMessage = messageRepo.create({
+                text: data.text,
+                sender: data.sender,
+                roomId: data.roomId,
+                receiver: data.receiver,
+                time: data.time
+            });
+
+            await messageRepo.save(newMessage);
+            io.to(data.roomId).emit("receive_message", data);
+            } catch (err) {
+                console.error("Mesaj kaydedilemedi:", err);
+            }
+            });
+            
     socket.on("disconnect", () => {
         console.log("❌ Birisi Telsizi Kapattı.");
     });
