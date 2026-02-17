@@ -7,7 +7,9 @@ const http = require("http");
 const { Server } = require("socket.io");
 const Message = require("./entity/Message");
 require("dotenv").config();
+
 let onlineUsers = {};
+let usersCredentials = {};
 
 const app = express();
 const PORT = process.env.PORT || 5001; 
@@ -25,12 +27,26 @@ app.use(express.json());
 app.use('/auth', authRouters);
 app.use('/posts', postRoutes);
 
-io.on("connection", async (socket) => {
-    console.log(`⚡️ Birisi Telsize Bağlandı! ID: ${socket.id}`);
-    socket.on("login", (username) => {
-    onlineUsers[socket.id] = username;
-    console.log(`✅ Giriş Yapıldı: ${username}`);
-    io.emit("active_users", Object.values(onlineUsers));
+io.on("connection", (socket) => {
+    console.log(`⚡️ Birisi Bağlandı! ID: ${socket.id}`);
+    socket.on("login", ({username, password}) => {
+        if (usersCredentials[username]) {
+        if (usersCredentials[username] === password) {
+        onlineUsers[socket.id] = username;
+        socket.emit("login_success");
+        io.emit("active_users", Object.values(onlineUsers));
+        console.log(`✅ ${username} giriş yaptı (Şifre Doğru).`);
+    } else {
+            socket.emit("login_error", "❌ Hatalı şifre! Bu isim alınmış.");
+            console.log(`🚫 ${username} İçin hatalı şifre denemesi.`);
+        } 
+    } else {
+        usersCredentials[username] = password;
+        onlineUsers[socket.id] = username;
+        socket.emit("login_success");
+        io.emit("active_users", Object.values(onlineUsers));
+        console.log(`🆕 Yeni Kullanıcı Kayboldu: ${username}`);
+    }
     });
     socket.on("join_room", async (roomId) => {
         socket.join(roomId);
